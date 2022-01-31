@@ -1,6 +1,7 @@
 import { ApiModelPropertyOptional } from '@nestjs/swagger';
 
 export class ApiException {
+  
   @ApiModelPropertyOptional()
   statusCode?: number;
 
@@ -8,17 +9,11 @@ export class ApiException {
   message?: string;
 
   @ApiModelPropertyOptional()
-  status?: string;
-
-  @ApiModelPropertyOptional()
-  error?: string;
-
-  @ApiModelPropertyOptional()
-  errors?: any;
+  error?: string[];
 
   @ApiModelPropertyOptional()
   timestamp?: string;
-
+  
   @ApiModelPropertyOptional()
   path?: string;
 }
