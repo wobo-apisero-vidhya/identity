@@ -21,7 +21,7 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-Got to <a href="http://localhost:1337/api/swagger ">http://localhost:1337/api/swagger</a> to find the swagger doc.
+Got to <a href="http://localhost:1339/api/swagger ">http://localhost:1339/api/swagger</a> to find the swagger doc.
 
 ## Test
 
