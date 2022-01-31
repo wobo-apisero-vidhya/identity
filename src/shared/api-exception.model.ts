@@ -9,7 +9,7 @@ export class ApiException {
   message?: string;
 
   @ApiModelPropertyOptional()
-  error?: string;
+  error?: string[];
 
   @ApiModelPropertyOptional()
   timestamp?: string;

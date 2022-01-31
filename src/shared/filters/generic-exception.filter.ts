@@ -16,11 +16,14 @@ import { ApiException } from '../api-exception.model';
       const httpStatus = exception instanceof HttpException
           ? exception.getStatus()
           : HttpStatus.INTERNAL_SERVER_ERROR;
+
+      const errorArray: string[] = [];
+      errorArray.push(exception.message);
   
       const responseBody: ApiException = {
         statusCode: httpStatus,
         message: "Internal Server Error. Please try again later.",
-        error: exception.message,
+        error: errorArray,
         timestamp: new Date().toISOString(),
         path: httpAdapter.getRequestUrl(ctx.getRequest()),
       };
