@@ -1,0 +1,761 @@
+---
+swagger: "2.0"
+info:
+  description: The API talks about WorkBoard's Groups SCIM implementation for the user provisioning. With this implementation, the IDPs supporting Groups SCIM, will be able to add and remove members using the Groups implementation. The Groups in IDPs (active directory) is mapping to WorkBoard\'s team with 1:1 entity relationship.
+  version: 1.0.1
+  title: WorkBoard SCIM
+  contact:
+    email: gaurav@workboard.com
+  license:
+    name: WorkBoard Inc.
+    url: https://www.workboard.com/license/terms_of_use_v1.html
+host: www.myworkboard.com
+basePath: /wb/apis/scim
+tags:
+- name: admins
+  description: Secured Admin-only calls
+- name: Users
+schemes:
+- https
+paths:
+  /Groups:
+    get:
+      tags:
+      - admins
+      summary: Get groups or group by displayName
+      description: It returns all the matching groups or matched group if the displayName is found. If the filter parameter is not used, it will return all the groups
+      operationId: getGroupByName
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: excludedAttributes
+        in: query
+        description: Pass its value as `memeber` if the response must not include org members
+        required: false
+        type: string
+      - name: filter
+        in: query
+        description: Set its value to `displayName eq "displayName"`
+        required: false
+        type: string
+      responses:
+        "200":
+          description: group created
+          schema:
+            $ref: '#/definitions/GroupListResponse'
+    post:
+      tags:
+      - admins
+      summary: Create Group
+      description: Create a Group
+      operationId: createGroup
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/PostBody'
+      responses:
+        "201":
+          description: group created
+          schema:
+            $ref: '#/definitions/GroupSchema'
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing item already exists
+  /Groups/{groupId}:
+    get:
+      tags:
+      - admins
+      summary: Get Group
+      description: Get a Group
+      operationId: getGroup
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: groupId
+        in: path
+        description: Group ID
+        required: true
+        type: string
+      - name: excludedAttributes
+        in: query
+        description: Pass its value as `memeber` if the response must not include org members
+        required: false
+        type: string
+      - name: filter
+        in: query
+        description: Get Group by displayName
+        required: false
+        type: string
+      responses:
+        "201":
+          description: group created
+          schema:
+            $ref: '#/definitions/GroupSchema'
+        "400":
+          description: invalid input, object invalid
+    delete:
+      tags:
+      - admins
+      summary: Update Group [Non-member attributes]
+      description: Update Group [Non-member attributes]
+      operationId: deleteGroup
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: groupId
+        in: path
+        description: Group ID
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+    patch:
+      tags:
+      - admins
+      summary: Update Group [Non-member attributes]
+      description: Update Group [Non-member attributes]
+      operationId: updateGroup
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: groupId
+        in: path
+        description: Group ID
+        required: true
+        type: string
+      - in: body
+        name: Operations
+        required: true
+        schema:
+          $ref: '#/definitions/PatchBody'
+      responses:
+        "204":
+          description: No Content
+  /Groups/{groupId}/:
+    patch:
+      tags:
+      - admins
+      summary: Update Group [Add Members]
+      description: Update Group [Add Members]
+      operationId: updateGroupAddMembers
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: groupId
+        in: path
+        description: Group ID
+        required: true
+        type: string
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/AddMemberOperationsItems'
+      responses:
+        "204":
+          description: No Content
+  /Groups//{groupId}/:
+    patch:
+      tags:
+      - admins
+      summary: Update Group [Remove Members]
+      description: Update Group [Remove Members]
+      operationId: updateGroupRemoveMembers
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: groupId
+        in: path
+        description: Group ID
+        required: true
+        type: string
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/RemoveMemberOperationsItems'
+      responses:
+        "204":
+          description: No Content
+  /Users:
+    get:
+      tags:
+      - Retrieve Users
+      summary: Fetch user details by filter
+      description: Fetch user details by filter
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: filter
+        in: query
+        required: true
+        type: string
+      security:
+      - Bearer: []
+      responses:
+        "200":
+          description: User found
+          schema:
+            $ref: '#/definitions/UserListResponse'
+    post:
+      tags:
+      - Create Users
+      summary: Create Okta user with realisitic values
+      description: Create Okta user with realisitic values
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/UserPostBody'
+      security:
+      - Bearer: []
+      responses:
+        "201":
+          description: User created
+          schema:
+            $ref: '#/definitions/UserSchema'
+  /Users/{id}:
+    get:
+      tags:
+      - Retrieve Users
+      summary: Gets users
+      description: Gets users
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: User Id
+        required: true
+        type: string
+      security:
+      - Bearer: []
+      responses:
+        "200":
+          description: User found
+          schema:
+            $ref: '#/definitions/UserSchema'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/inline_response_404'
+    delete:
+      tags:
+      - Remove Users
+      summary: Delete User
+      description: Delete User by ID
+      operationId: deleteUser
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: User ID
+        required: true
+        type: string
+      security:
+      - Bearer: []
+      responses:
+        "204":
+          description: No Content
+    patch:
+      tags:
+      - Update Users
+      summary: Update User; Multiple and single operations
+      description: Update User; Multiple and single operations
+      operationId: updateUsers
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: User ID
+        required: true
+        type: string
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/UserPatchBody'
+      security:
+      - Bearer: []
+      responses:
+        "200":
+          description: Details Updated
+          schema:
+            $ref: '#/definitions/UserSchema'
+  /Users/{id}/:
+    patch:
+      tags:
+      - Update Users
+      summary: Disable user by ID
+      description: Disable user by ID
+      operationId: disableUsers
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: User ID
+        required: true
+        type: string
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/UserPatchBody'
+      security:
+      - Bearer: []
+      responses:
+        "200":
+          description: Details Updated
+          schema:
+            $ref: '#/definitions/UserDisableResponse'
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+definitions:
+  PostBody:
+    properties:
+      schemas:
+        type: array
+        example:
+        - urn:ietf:params:scim:schemas:core:2.0:Group
+        items:
+          type: string
+          enum:
+          - urn:ietf:params:scim:schemas:core:2.0:Group
+      externalId:
+        type: string
+        example: "123456"
+      displayName:
+        type: string
+        example: Display Name
+      meta:
+        $ref: '#/definitions/GroupMeta'
+  PatchBody:
+    properties:
+      schemas:
+        type: array
+        example:
+        - urn:ietf:params:scim:api:messages:2.0:PatchOp
+        items:
+          type: string
+          enum:
+          - urn:ietf:params:scim:api:messages:2.0:PatchOp
+      operations:
+        type: array
+        items:
+          $ref: '#/definitions/OperationsItems'
+  RemoveMemberOperationsItems:
+    properties:
+      op:
+        type: string
+        example: Remove
+      path:
+        type: string
+        example: members
+      value: {}
+  AddMemberOperationsItems:
+    properties:
+      op:
+        type: string
+        example: Add
+      path:
+        type: string
+        example: members
+      value: {}
+  MemberRefItems:
+    properties:
+      $ref:
+        type: string
+        example: "null"
+      value:
+        type: string
+        example: f648f8d5ea4e4cd38e9c
+  OperationsItems:
+    properties:
+      op:
+        type: string
+        example: Replace
+      path:
+        type: string
+        example: displayName
+      value:
+        type: string
+        example: displayName
+  Groups:
+    type: object
+    required:
+    - displayName
+    - externalId
+    - meta
+    - schemas
+    properties:
+      schemas:
+        type: array
+        example:
+        - urn:ietf:params:scim:schemas:core:2.0:Group
+        - http://schemas.microsoft.com/2006/11/ResourceManagement/ADSCIM/2.0/Group
+        items:
+          type: string
+          enum:
+          - urn:ietf:params:scim:schemas:core:2.0:Group
+          - http://schemas.microsoft.com/2006/11/ResourceManagement/ADSCIM/2.0/Group
+      externalId:
+        type: string
+        example: External Id
+      displayName:
+        type: string
+        example: Group
+      meta:
+        $ref: '#/definitions/GroupMeta'
+  GroupMeta:
+    properties:
+      resourceType:
+        type: string
+        example: Group
+      created:
+        type: string
+        example: 2018-03-27T19:59:26.000Z
+      lastModified:
+        type: string
+        example: 2018-03-27T19:59:26.000Z
+  GroupSchema:
+    properties:
+      schemas:
+        type: array
+        example:
+        - urn:ietf:params:scim:schemas:core:2.0:Group
+        items:
+          type: string
+          enum:
+          - urn:ietf:params:scim:schemas:core:2.0:Group
+      id:
+        type: string
+        example: 927fa2c08dcb4a7fae9e
+      externalId:
+        type: string
+        example: 8aa1a0c0-c4c3-4bc0-b4a5-2ef676900159
+      meta:
+        $ref: '#/definitions/GroupMeta'
+      displayName:
+        type: string
+        example: Group
+      members:
+        type: array
+        example: []
+        items:
+          type: string
+  GroupListResponse:
+    properties:
+      schemas:
+        type: array
+        example:
+        - urn:ietf:params:scim:api:messages:2.0:ListResponse
+        items:
+          type: string
+          enum:
+          - urn:ietf:params:scim:api:messages:2.0:ListResponse
+      totalResults:
+        type: integer
+        example: 1
+      startIndex:
+        type: integer
+        example: 1
+      itemsPerPage:
+        type: integer
+        example: 20
+      Resources:
+        type: array
+        items:
+          $ref: '#/definitions/Groups'
+  UserSchema:
+    properties:
+      schemas:
+        type: array
+        example:
+        - urn:ietf:params:scim:schemas:core:2.0:User
+        - urn:ietf:params:scim:schemas:extension:enterprise:2.0:User
+        items:
+          type: string
+          example: urn:ietf:params:scim:schemas:core:2.0:User
+      id:
+        type: string
+        example: 927fa2c08dcb4a7fae9e
+      externalId:
+        type: string
+        example: 8aa1a0c0-c4c3-4bc0-b4a5-2ef676900159
+      meta:
+        $ref: '#/definitions/UserMeta'
+      userName:
+        type: string
+        example: WoBo-user@wobodev.com
+      name:
+        $ref: '#/definitions/UserSchema_name'
+      active:
+        type: boolean
+        example: true
+      emails:
+        type: array
+        example:
+        - primary: true
+          type: work
+          value: TWoBo-user@wobodev.com
+        items:
+          $ref: '#/definitions/UserSchema_emails'
+  UserMeta:
+    properties:
+      resourceType:
+        type: string
+        example: User
+      created:
+        type: string
+        example: 2018-03-27T19:59:26.000Z
+      lastModified:
+        type: string
+        example: 2018-03-27T19:59:26.000Z
+  UserListResponse:
+    properties:
+      schemas:
+        type: array
+        example:
+        - urn:ietf:params:scim:api:messages:2.0:ListResponse
+        items:
+          type: string
+          enum:
+          - urn:ietf:params:scim:api:messages:2.0:ListResponse
+      totalResults:
+        type: integer
+        example: 0
+      Resources:
+        type: array
+        example: []
+        items:
+          $ref: '#/definitions/UserSchema'
+      startIndex:
+        type: integer
+        example: 1
+      itemsPerPage:
+        type: integer
+        example: 20
+  UserPostBody:
+    properties:
+      schemas:
+        type: array
+        example:
+        - urn:ietf:params:scim:schemas:core:2.0:User
+        - urn:ietf:params:scim:schemas:extension:enterprise:2.0:User
+        items:
+          type: string
+          example: urn:ietf:params:scim:schemas:core:2.0:User
+      externalID:
+        type: string
+        example: 0a21f0f2-8d2a-4f8e-bf98-7363c4aed4ef
+      userName:
+        type: string
+        example: WoBo-user@wobodev.com
+      active:
+        type: boolean
+        example: true
+      emails:
+        type: array
+        example:
+        - primary: true
+          type: work
+          value: WoBo-user@wobodev.com
+        items:
+          $ref: '#/definitions/UserSchema_emails'
+      meta:
+        $ref: '#/definitions/UserPostBody_meta'
+      name:
+        $ref: '#/definitions/UserSchema_name'
+      roles:
+        type: array
+        example: []
+        items:
+          type: string
+  UserPatchBody:
+    properties:
+      schemas:
+        type: array
+        example:
+        - urn:ietf:params:scim:schemas:core:2.0:PatchOp
+        - urn:ietf:params:scim:schemas:extension:enterprise:2.0:PatchOp
+        items:
+          type: string
+          example: urn:ietf:params:scim:schemas:core:2.0:PatchOp
+      Operations:
+        type: array
+        items:
+          $ref: '#/definitions/UserPatchBody_Operations'
+    description: Request for updating the users, multiple or single operations
+  UserDisableResponse:
+    properties:
+      schemas:
+        type: array
+        example:
+        - urn:ietf:params:scim:schemas:core:2.0:User
+        - urn:ietf:params:scim:schemas:extension:enterprise:2.0:User
+        items:
+          type: string
+          example: urn:ietf:params:scim:schemas:core:2.0:User
+      id:
+        type: string
+        example: 927fa2c08dcb4a7fae9e
+      userName:
+        type: string
+        example: WoBo-user@wobodev.com
+      name:
+        $ref: '#/definitions/UserDisableResponse_name'
+      active:
+        type: boolean
+        example: true
+      emails:
+        type: array
+        example:
+        - primary: true
+          type: work
+          value: WoBo-user@wobodev.com
+        items:
+          $ref: '#/definitions/UserSchema_emails'
+      addresses:
+        type: array
+        example:
+        - country: ML
+          type: work
+          primary: true
+        items:
+          $ref: '#/definitions/UserDisableResponse_addresses'
+      meta:
+        $ref: '#/definitions/UserDisableResponse_meta'
+    description: Response of the user disable request
+  inline_response_404:
+    type: object
+    properties:
+      schemas:
+        type: array
+        example:
+        - urn:ietf:params:scim:schemas:core:2.0:User
+        items:
+          type: string
+          enum:
+          - urn:ietf:params:scim:schemas:core:2.0:User
+          - urn:ietf:params:scim:schemas:extension:enterprise:2.0:User
+      status:
+        type: string
+        example: "404"
+      detail:
+        type: string
+        example: Resource 23B51B0E5D7AE9110A49411D@7cca31655d49f3640a494224 not found
+  UserSchema_name:
+    type: object
+    properties:
+      formatted:
+        type: string
+        example: givenName familyName
+      familyName:
+        type: string
+        example: doe
+      givenName:
+        type: string
+        example: john
+    example: '{"formatted":"givenName familyName","familyName":"doe","givenName":"john"}'
+  UserSchema_emails:
+    type: object
+    properties:
+      primary:
+        type: boolean
+        example: true
+      type:
+        type: string
+        example: work
+      value:
+        type: string
+        example: WoBo-user@wobodev.com
+  UserPostBody_meta:
+    type: object
+    properties:
+      resourceType:
+        type: string
+        example: User
+    example: '{"resourceType":"User"}'
+  UserPatchBody_Operations:
+    type: object
+    properties:
+      op:
+        type: string
+        example: Replace
+      path:
+        type: string
+        example: emails[type eq "work"].value
+      value:
+        type: string
+        example: WoBo-user@workboard.com
+  UserDisableResponse_name:
+    type: object
+    properties:
+      familyName:
+        type: string
+        example: Harris
+      givenName:
+        type: string
+        example: Larry
+  UserDisableResponse_addresses:
+    type: object
+    properties:
+      country:
+        type: string
+        example: ML
+      type:
+        type: string
+        example: work
+      primary:
+        type: boolean
+        example: true
+  UserDisableResponse_meta:
+    type: object
+    properties:
+      resourceType:
+        type: string
+        example: Users
+      location:
+        type: string
+        example: /scim/5171a35d82074e068ce2/Users/CEC50F265D83B4530B495FCF@5171a35d82074e068ce2
