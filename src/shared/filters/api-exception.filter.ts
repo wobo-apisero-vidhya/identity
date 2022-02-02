@@ -15,17 +15,17 @@ import {
     UnsupportedMediaTypeException,
     UnprocessableEntityException
 } from '@nestjs/common';
-import { HttpAdapterHost } from '@nestjs/core';
 import { ApiException } from '../api-exception.model';
 
 @Catch(BadRequestException)
 class BadRequestExceptionFilter implements ExceptionFilter {
-    constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
     catch(exception: BadRequestException, host: ArgumentsHost): void{
-        const { httpAdapter } = this.httpAdapterHost;
-  
+
         const ctx = host.switchToHttp();
+        const req = ctx.getRequest();
+        const res = ctx.getResponse();
+
         const errorArray: string[] = [];
         errorArray.push(exception.message);
         const responseBody: ApiException = {
@@ -33,23 +33,26 @@ class BadRequestExceptionFilter implements ExceptionFilter {
           message: "Execution Failed! Please check the request sent.",
           error: errorArray,
           timestamp: new Date().toISOString(),
-          path: httpAdapter.getRequestUrl(ctx.getRequest()),
+          path: req ? req.url : null,
         };
 
         console.log("Response to be sent :: " + responseBody)
     
-        httpAdapter.reply(ctx.getResponse(), responseBody, exception.getStatus());
+        res.status(exception.getStatus()).json({
+            error: responseBody,
+        });
     }
 }
 
 @Catch(UnauthorizedException)
 class UnauthorizedExceptionFilter implements ExceptionFilter {
-    constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
     catch(exception: BadRequestException, host: ArgumentsHost): void{
-        const { httpAdapter } = this.httpAdapterHost;
-  
+
         const ctx = host.switchToHttp();
+        const req = ctx.getRequest();
+        const res = ctx.getResponse();
+
         const errorArray: string[] = [];
         errorArray.push(exception.message);
         const responseBody: ApiException = {
@@ -57,23 +60,26 @@ class UnauthorizedExceptionFilter implements ExceptionFilter {
           message: "Authorization failed for your request.",
           error: errorArray,
           timestamp: new Date().toISOString(),
-          path: httpAdapter.getRequestUrl(ctx.getRequest()),
+          path: req ? req.url : null,
         };
 
         console.log("Response to be sent :: " + responseBody)
     
-        httpAdapter.reply(ctx.getResponse(), responseBody, exception.getStatus());
+        res.status(exception.getStatus()).json({
+            error: responseBody,
+        });
     }
 }
 
 @Catch(ForbiddenException)
 class ForbiddenExceptionFilter implements ExceptionFilter {
-    constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
     catch(exception: BadRequestException, host: ArgumentsHost): void{
-        const { httpAdapter } = this.httpAdapterHost;
-  
+
         const ctx = host.switchToHttp();
+        const req = ctx.getRequest();
+        const res = ctx.getResponse();
+
         const errorArray: string[] = [];
         errorArray.push(exception.message);
         const responseBody: ApiException = {
@@ -81,23 +87,26 @@ class ForbiddenExceptionFilter implements ExceptionFilter {
           message: "You don't have access to the requested action.",
           error: errorArray,
           timestamp: new Date().toISOString(),
-          path: httpAdapter.getRequestUrl(ctx.getRequest()),
+          path: req ? req.url : null,
         };
 
         console.log("Response to be sent :: " + responseBody)
     
-        httpAdapter.reply(ctx.getResponse(), responseBody, exception.getStatus());
+        res.status(exception.getStatus()).json({
+            error: responseBody,
+        });
     }
 }
 
 @Catch(NotFoundException)
 class NotFoundExceptionFilter implements ExceptionFilter {
-    constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
     catch(exception: BadRequestException, host: ArgumentsHost): void{
-        const { httpAdapter } = this.httpAdapterHost;
-  
+
         const ctx = host.switchToHttp();
+        const req = ctx.getRequest();
+        const res = ctx.getResponse();
+
         const errorArray: string[] = [];
         errorArray.push(exception.message);
         const responseBody: ApiException = {
@@ -105,23 +114,26 @@ class NotFoundExceptionFilter implements ExceptionFilter {
           message: "The requested resource could not be found.",
           error: errorArray,
           timestamp: new Date().toISOString(),
-          path: httpAdapter.getRequestUrl(ctx.getRequest()),
+          path: req ? req.url : null,
         };
 
         console.log("Response to be sent :: " + responseBody)
     
-        httpAdapter.reply(ctx.getResponse(), responseBody, exception.getStatus());
+        res.status(exception.getStatus()).json({
+            error: responseBody,
+        });
     }
 }
 
 @Catch(MethodNotAllowedException)
 class MethodNotAllowedExceptionFilter implements ExceptionFilter {
-    constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
     catch(exception: BadRequestException, host: ArgumentsHost): void{
-        const { httpAdapter } = this.httpAdapterHost;
-  
+
         const ctx = host.switchToHttp();
+        const req = ctx.getRequest();
+        const res = ctx.getResponse();
+
         const errorArray: string[] = [];
         errorArray.push(exception.message);
         const responseBody: ApiException = {
@@ -129,23 +141,26 @@ class MethodNotAllowedExceptionFilter implements ExceptionFilter {
           message: "The requested method is not supported for the provided url.",
           error: errorArray,
           timestamp: new Date().toISOString(),
-          path: httpAdapter.getRequestUrl(ctx.getRequest()),
+          path: req ? req.url : null,
         };
 
         console.log("Response to be sent :: " + responseBody)
     
-        httpAdapter.reply(ctx.getResponse(), responseBody, exception.getStatus());
+        res.status(exception.getStatus()).json({
+            error: responseBody,
+        });
     }
 }
 
 @Catch(NotAcceptableException)
 class NotAcceptableExceptionFilter implements ExceptionFilter {
-    constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
     catch(exception: BadRequestException, host: ArgumentsHost): void{
-        const { httpAdapter } = this.httpAdapterHost;
-  
+
         const ctx = host.switchToHttp();
+        const req = ctx.getRequest();
+        const res = ctx.getResponse();
+
         const errorArray: string[] = [];
         errorArray.push(exception.message);
         const responseBody: ApiException = {
@@ -153,23 +168,26 @@ class NotAcceptableExceptionFilter implements ExceptionFilter {
           message: "The request was denied by the server. Please check the request",
           error: errorArray,
           timestamp: new Date().toISOString(),
-          path: httpAdapter.getRequestUrl(ctx.getRequest()),
+          path: req ? req.url : null,
         };
 
         console.log("Response to be sent :: " + responseBody)
     
-        httpAdapter.reply(ctx.getResponse(), responseBody, exception.getStatus());
+        res.status(exception.getStatus()).json({
+            error: responseBody,
+        });
     }
 }
 
 @Catch(RequestTimeoutException)
 class RequestTimeoutExceptionFilter implements ExceptionFilter {
-    constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
     catch(exception: BadRequestException, host: ArgumentsHost): void{
-        const { httpAdapter } = this.httpAdapterHost;
-  
+
         const ctx = host.switchToHttp();
+        const req = ctx.getRequest();
+        const res = ctx.getResponse();
+
         const errorArray: string[] = [];
         errorArray.push(exception.message);
         const responseBody: ApiException = {
@@ -177,23 +195,26 @@ class RequestTimeoutExceptionFilter implements ExceptionFilter {
           message: "Time-out. The server took too long to respond. Please try again later.",
           error: errorArray,
           timestamp: new Date().toISOString(),
-          path: httpAdapter.getRequestUrl(ctx.getRequest()),
+          path: req ? req.url : null,
         };
 
         console.log("Response to be sent :: " + responseBody)
     
-        httpAdapter.reply(ctx.getResponse(), responseBody, exception.getStatus());
+        res.status(exception.getStatus()).json({
+            error: responseBody,
+        });
     }
 }
 
 @Catch(ConflictException)
 class ConflictExceptionFilter implements ExceptionFilter {
-    constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
     catch(exception: BadRequestException, host: ArgumentsHost): void{
-        const { httpAdapter } = this.httpAdapterHost;
-  
+
         const ctx = host.switchToHttp();
+        const req = ctx.getRequest();
+        const res = ctx.getResponse();
+
         const errorArray: string[] = [];
         errorArray.push(exception.message);
         const responseBody: ApiException = {
@@ -201,23 +222,26 @@ class ConflictExceptionFilter implements ExceptionFilter {
           message: "Your request could not be processed.",
           error: errorArray,
           timestamp: new Date().toISOString(),
-          path: httpAdapter.getRequestUrl(ctx.getRequest()),
+          path: req ? req.url : null,
         };
 
         console.log("Response to be sent :: " + responseBody)
     
-        httpAdapter.reply(ctx.getResponse(), responseBody, exception.getStatus());
+        res.status(exception.getStatus()).json({
+            error: responseBody,
+        });
     }
 }
 
 @Catch(GoneException)
 class GoneExceptionFilter implements ExceptionFilter {
-    constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
     catch(exception: BadRequestException, host: ArgumentsHost): void{
-        const { httpAdapter } = this.httpAdapterHost;
-  
+
         const ctx = host.switchToHttp();
+        const req = ctx.getRequest();
+        const res = ctx.getResponse();
+
         const errorArray: string[] = [];
         errorArray.push(exception.message);
         const responseBody: ApiException = {
@@ -225,23 +249,26 @@ class GoneExceptionFilter implements ExceptionFilter {
           message: "The requested resource is no longer available.",
           error: errorArray,
           timestamp: new Date().toISOString(),
-          path: httpAdapter.getRequestUrl(ctx.getRequest()),
+          path: req ? req.url : null,
         };
 
         console.log("Response to be sent :: " + responseBody)
     
-        httpAdapter.reply(ctx.getResponse(), responseBody, exception.getStatus());
+        res.status(exception.getStatus()).json({
+            error: responseBody,
+        });
     }
 }
 
 @Catch(PayloadTooLargeException)
 class PayloadTooLargeExceptionFilter implements ExceptionFilter {
-    constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
     catch(exception: BadRequestException, host: ArgumentsHost): void{
-        const { httpAdapter } = this.httpAdapterHost;
-  
+
         const ctx = host.switchToHttp();
+        const req = ctx.getRequest();
+        const res = ctx.getResponse();
+
         const errorArray: string[] = [];
         errorArray.push(exception.message);
         const responseBody: ApiException = {
@@ -249,23 +276,26 @@ class PayloadTooLargeExceptionFilter implements ExceptionFilter {
           message: "Your request payload was too large for the server to process.",
           error: errorArray,
           timestamp: new Date().toISOString(),
-          path: httpAdapter.getRequestUrl(ctx.getRequest()),
+          path: req ? req.url : null,
         };
 
         console.log("Response to be sent :: " + responseBody)
     
-        httpAdapter.reply(ctx.getResponse(), responseBody, exception.getStatus());
+        res.status(exception.getStatus()).json({
+            error: responseBody,
+        });
     }
 }
 
 @Catch(UnsupportedMediaTypeException)
 class UnsupportedMediaTypeExceptionFilter implements ExceptionFilter {
-    constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
     catch(exception: BadRequestException, host: ArgumentsHost): void{
-        const { httpAdapter } = this.httpAdapterHost;
-  
+
         const ctx = host.switchToHttp();
+        const req = ctx.getRequest();
+        const res = ctx.getResponse();
+
         const errorArray: string[] = [];
         errorArray.push(exception.message);
         const responseBody: ApiException = {
@@ -273,23 +303,26 @@ class UnsupportedMediaTypeExceptionFilter implements ExceptionFilter {
           message: "The incoming media type is not supported. Please check the request.",
           error: errorArray,
           timestamp: new Date().toISOString(),
-          path: httpAdapter.getRequestUrl(ctx.getRequest()),
+          path: req ? req.url : null,
         };
 
         console.log("Response to be sent :: " + responseBody)
     
-        httpAdapter.reply(ctx.getResponse(), responseBody, exception.getStatus());
+        res.status(exception.getStatus()).json({
+            error: responseBody,
+        });
     }
 }
 
 @Catch(UnprocessableEntityException)
 class UnprocessableEntityExceptionFilter implements ExceptionFilter {
-    constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
     catch(exception: BadRequestException, host: ArgumentsHost): void{
-        const { httpAdapter } = this.httpAdapterHost;
-  
+
         const ctx = host.switchToHttp();
+        const req = ctx.getRequest();
+        const res = ctx.getResponse();
+
         const errorArray: string[] = [];
         errorArray.push(exception.message);
         const responseBody: ApiException = {
@@ -297,12 +330,14 @@ class UnprocessableEntityExceptionFilter implements ExceptionFilter {
           message: "Your request was not processed. Please check the request and request body.",
           error: errorArray,
           timestamp: new Date().toISOString(),
-          path: httpAdapter.getRequestUrl(ctx.getRequest()),
+          path: req ? req.url : null,
         };
 
         console.log("Response to be sent :: " + responseBody)
     
-        httpAdapter.reply(ctx.getResponse(), responseBody, exception.getStatus());
+        res.status(exception.getStatus()).json({
+            error: responseBody,
+        });
     }
 }
 
