@@ -3,7 +3,7 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as helmet from 'helmet';
 import { AppModule } from './app.module';
-import { HttpExceptionFilter } from './shared/filters/http-exception.filter';
+import { GenericHttpExceptionsFilter } from './shared/filters/generic-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -30,7 +30,7 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
-  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(new GenericHttpExceptionsFilter());
 
   await app.listen(AppModule.port);
 
