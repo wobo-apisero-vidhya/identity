@@ -27,7 +27,7 @@ import { ApiException } from '../api-exception.model';
         path: req ? req.url : null
       };
 
-      console.log("Response to be sent :: " + responseBody)
+      console.log("Response to be sent :: " + JSON.stringify(responseBody))
   
       res.status(httpStatus).json({
         error: responseBody,

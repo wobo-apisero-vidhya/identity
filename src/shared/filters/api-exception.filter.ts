@@ -36,7 +36,7 @@ class BadRequestExceptionFilter implements ExceptionFilter {
           path: req ? req.url : null,
         };
 
-        console.log("Response to be sent :: " + responseBody)
+        console.log("Response to be sent :: " + JSON.stringify(responseBody));
     
         res.status(exception.getStatus()).json({
             error: responseBody,
@@ -63,7 +63,7 @@ class UnauthorizedExceptionFilter implements ExceptionFilter {
           path: req ? req.url : null,
         };
 
-        console.log("Response to be sent :: " + responseBody)
+        console.log("Response to be sent :: " + JSON.stringify(responseBody));
     
         res.status(exception.getStatus()).json({
             error: responseBody,
@@ -90,7 +90,7 @@ class ForbiddenExceptionFilter implements ExceptionFilter {
           path: req ? req.url : null,
         };
 
-        console.log("Response to be sent :: " + responseBody)
+        console.log("Response to be sent :: " + JSON.stringify(responseBody));
     
         res.status(exception.getStatus()).json({
             error: responseBody,
@@ -117,7 +117,7 @@ class NotFoundExceptionFilter implements ExceptionFilter {
           path: req ? req.url : null,
         };
 
-        console.log("Response to be sent :: " + responseBody)
+        console.log("Response to be sent :: " + JSON.stringify(responseBody));
     
         res.status(exception.getStatus()).json({
             error: responseBody,
@@ -144,7 +144,7 @@ class MethodNotAllowedExceptionFilter implements ExceptionFilter {
           path: req ? req.url : null,
         };
 
-        console.log("Response to be sent :: " + responseBody)
+        console.log("Response to be sent :: " + JSON.stringify(responseBody));
     
         res.status(exception.getStatus()).json({
             error: responseBody,
@@ -171,7 +171,7 @@ class NotAcceptableExceptionFilter implements ExceptionFilter {
           path: req ? req.url : null,
         };
 
-        console.log("Response to be sent :: " + responseBody)
+        console.log("Response to be sent :: " + JSON.stringify(responseBody));
     
         res.status(exception.getStatus()).json({
             error: responseBody,
@@ -198,7 +198,7 @@ class RequestTimeoutExceptionFilter implements ExceptionFilter {
           path: req ? req.url : null,
         };
 
-        console.log("Response to be sent :: " + responseBody)
+        console.log("Response to be sent :: " + JSON.stringify(responseBody));
     
         res.status(exception.getStatus()).json({
             error: responseBody,
@@ -225,7 +225,7 @@ class ConflictExceptionFilter implements ExceptionFilter {
           path: req ? req.url : null,
         };
 
-        console.log("Response to be sent :: " + responseBody)
+        console.log("Response to be sent :: " + JSON.stringify(responseBody));
     
         res.status(exception.getStatus()).json({
             error: responseBody,
@@ -252,7 +252,7 @@ class GoneExceptionFilter implements ExceptionFilter {
           path: req ? req.url : null,
         };
 
-        console.log("Response to be sent :: " + responseBody)
+        console.log("Response to be sent :: " + JSON.stringify(responseBody));
     
         res.status(exception.getStatus()).json({
             error: responseBody,
@@ -279,7 +279,7 @@ class PayloadTooLargeExceptionFilter implements ExceptionFilter {
           path: req ? req.url : null,
         };
 
-        console.log("Response to be sent :: " + responseBody)
+        console.log("Response to be sent :: " + JSON.stringify(responseBody));
     
         res.status(exception.getStatus()).json({
             error: responseBody,
@@ -306,7 +306,7 @@ class UnsupportedMediaTypeExceptionFilter implements ExceptionFilter {
           path: req ? req.url : null,
         };
 
-        console.log("Response to be sent :: " + responseBody)
+        console.log("Response to be sent :: " + JSON.stringify(responseBody));
     
         res.status(exception.getStatus()).json({
             error: responseBody,
@@ -333,7 +333,7 @@ class UnprocessableEntityExceptionFilter implements ExceptionFilter {
           path: req ? req.url : null,
         };
 
-        console.log("Response to be sent :: " + responseBody)
+        console.log("Response to be sent :: " + JSON.stringify(responseBody));
     
         res.status(exception.getStatus()).json({
             error: responseBody,
