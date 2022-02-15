@@ -199,8 +199,6 @@ paths:
           description: No Content
   /Users:
     get:
-      security:
-      - Bearer: []
       tags:
       - Retrieve Users
       summary: Fetch user details by filter
@@ -222,8 +220,6 @@ paths:
           schema:
             $ref: '#/definitions/UserListResponse'
     post:
-      security:
-      - Bearer: []
       tags:
       - Create Users
       summary: Create Okta user with realisitic values
@@ -247,8 +243,6 @@ paths:
             $ref: '#/definitions/UserSchema'
   /Users/{id}:
     get:
-      security:
-      - Bearer: []
       tags:
       - Retrieve Users
       summary: Gets users
@@ -275,8 +269,6 @@ paths:
           schema:
             $ref: '#/definitions/inline_response_404'
     delete:
-      security:
-      - Bearer: []
       tags:
       - Remove Users
       summary: Delete User
@@ -298,8 +290,6 @@ paths:
         "204":
           description: No Content
     patch:
-      security:
-      - Bearer: []
       tags:
       - Update Users
       summary: Update User; Multiple and single operations
@@ -329,8 +319,6 @@ paths:
             $ref: '#/definitions/UserSchema'
   /Users/{id}/:
     patch:
-      security:
-      - Bearer: []
       tags:
       - Update Users
       summary: Disable user by ID
